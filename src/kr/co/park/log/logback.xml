@@ -1,0 +1,26 @@
+<configuration scan="true" scanPeriod="30 seconds">
+  <property name="LOGS_ABSOLUTE_PATH" value="./logs" />
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>%d{YYYY-MM-dd HH:mm:ss},%d{SSS} |-%-5level in %logger{36}.%method\(%file:%line\) - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOGS_ABSOLUTE_PATH}/storagemanager.log</file>
+    <encoder>
+      <pattern>%d{YYYY-MM-dd HH:mm:ss},%d{SSS} |-%-5level in %logger{36}.%method\(%file:%line\) - %msg%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOGS_ABSOLUTE_PATH}/storagemanager.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- or whenever the file size reaches 100MB -->
+        <maxFileSize>100MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+  </appender>
+  <root level="info">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="ROLLING" />
+  </root>
+</configuration>
