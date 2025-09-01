@@ -1,26 +1,33 @@
 <configuration scan="true" scanPeriod="30 seconds">
+  <!-- 로그 파일 저장 경로 지정 -->
   <property name="LOGS_ABSOLUTE_PATH" value="./logs" />
+
+  <!-- 콘솔 출력 -->
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>%d{YYYY-MM-dd HH:mm:ss},%d{SSS} |-%-5level in %logger{36}.%method\(%file:%line\) - %msg%n</pattern>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} |-%-5level in %logger{36}.%M(%file:%line) - %msg%n</pattern>
     </encoder>
   </appender>
+
+  <!-- 파일 출력 (롤링 적용) -->
   <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOGS_ABSOLUTE_PATH}/storagemanager.log</file>
+    <file>${LOGS_ABSOLUTE_PATH}/logback.log</file>
     <encoder>
-      <pattern>%d{YYYY-MM-dd HH:mm:ss},%d{SSS} |-%-5level in %logger{36}.%method\(%file:%line\) - %msg%n</pattern>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} |-%-5level in %logger{36}.%M(%file:%line) - %msg%n</pattern>
       <charset>UTF-8</charset>
     </encoder>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${LOGS_ABSOLUTE_PATH}/storagemanager.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <!-- or whenever the file size reaches 100MB -->
-        <maxFileSize>100MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
+
+    <!-- 날짜 + 파일 크기 기준 롤링 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${LOGS_ABSOLUTE_PATH}/logback.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>100MB</maxFileSize>
+      <maxHistory>30</maxHistory> <!-- 30일치 보관 (옵션) -->
     </rollingPolicy>
   </appender>
+
+  <!-- 루트 로거: INFO 이상 로그를 콘솔 + 파일에 기록 -->
   <root level="info">
     <appender-ref ref="CONSOLE"/>
-    <appender-ref ref="ROLLING" />
+    <appender-ref ref="ROLLING"/>
   </root>
 </configuration>
